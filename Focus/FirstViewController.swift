@@ -26,6 +26,7 @@ class FirstViewController: UIViewController {
         startButton.addTarget(self, action: #selector(self.startButtonClicked(_:)), for: .touchDown);
         stopButton.addTarget(self, action: #selector(self.stopButtonClicked(_:)), for: .touchDown);
         Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(self.updateUI), userInfo: nil, repeats: true); // timer for updateing the ui
+        timeLeft = millisPerCycle;
     }
     
     @objc func startButtonClicked(_  sender:  UIButton){
@@ -41,12 +42,11 @@ class FirstViewController: UIViewController {
     
     @objc func updateUI(){
         updateTimeLeft();
-        timeLabel.text = String(timeLeft);
+        let timeLeftMin = timeLeft / (1000*60); // min
+        let timeLeftSeconds = ((timeLeft / 1000) % 60)
+        timeLabel.text = String("\(timeLeftMin) : \(timeLeftSeconds)" );
     }
     
-    func getTimeLeft(){
-        
-    }
     func updateTimeLeft(){
         timeLeft = timeLeft - getTimePassedSinceLastUpdate();
         lastUpdateTime = Date().millisecondsSince1970;
