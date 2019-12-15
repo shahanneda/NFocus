@@ -13,10 +13,13 @@ class FirstViewController: UIViewController {
     @IBOutlet weak var startButton: UIButton!
     @IBOutlet weak var stopButton: UIButton!
     
+    // Note: by default the date object already has compare methods and milliseconds is not required, but becuase this is going to be moved to an online one later one we are using milliseconds instead.
+    
     private var millisPerCycle =  25 * 60_000; //number of milliseconds per cycle, by defualt 25 minutes
     private var startTime = Date().millisecondsSince1970;
     private var timeLeft = 0;
     
+    private var lastUpdateTime = Date().millisecondsSince1970;
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -37,16 +40,25 @@ class FirstViewController: UIViewController {
     }
     
     @objc func updateUI(){
-        
-        print("HEYO");
+        updateTimeLeft();
+        timeLabel.text = String(timeLeft);
     }
+    
     func getTimeLeft(){
         
     }
-    func getTimePassed() -> Int{//later on move this to a web server so it can not be cheated
+    func updateTimeLeft(){
+        timeLeft = timeLeft - getTimePassedSinceLastUpdate();
+        lastUpdateTime = Date().millisecondsSince1970;
+    }
+    
+    func getTimePassedTotal() -> Int{//later on move this to a web server so it can not be cheated
         let timeNow = Date().millisecondsSince1970;
         let timePassed = Int(startTime - timeNow);
         return timePassed;
+    }
+    func getTimePassedSinceLastUpdate() -> Int{
+        return Int(Date().millisecondsSince1970 - lastUpdateTime);
     }
     
     
